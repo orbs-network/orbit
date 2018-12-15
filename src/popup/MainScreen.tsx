@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 
 interface IProps {}
 
@@ -14,9 +15,7 @@ export class MainScreen extends React.Component<IProps> {
     render() {
         return (
             <div>
-                <button onClick={() => this.reportToMeckano()}>At Work</button>
-                <button>Day Off</button>
-                <button>Work From Home</button>
+                <Button onClick={() => this.reportToMeckano()} variant="contained">At Work</Button>
             </div>
         );
     }
