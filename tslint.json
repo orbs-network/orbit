@@ -5,7 +5,9 @@
         "tslint-config-airbnb",
         "tslint-react"
     ],
-    "jsRules": {},
+    "jsRules": {
+        "indent": false,
+    },
     "rules": {},
     "rulesDirectory": []
 }
