@@ -1,6 +1,5 @@
-* icons
-* better blink
-* material ui
-* animations
-* report more than "at work"
-* implement hadSuccessFullReportToday
+- icons
+- better blink
+- don't blink at weekend
+- report more than "at work"
+- implement hadSuccessFullReportToday

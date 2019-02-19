@@ -1,20 +1,19 @@
 {
-    "manifest_version": 2,
-    "name": "Chrome Extension (built with TypeScript + React)",
-    "description": "A boilerplate project to quickly build a Chrome extension using TypeScript and React (built using webpack).",
-    "version": "1.0.0",
-    "browser_action": {
-        "default_popup": "src/popup/popup.html"
-    },
-    "background": {
-        "scripts": [
-            "dist/js/background.js"
-        ],
-        "persistent": true
-    },
-    "permissions": [
-        "webRequest",
-        "webRequestBlocking",
-        "https://app.meckano.co.il/api/*"
-    ]
+  "manifest_version": 2,
+  "name": "Meckano Automator",
+  "description": "A chrome extension to automate entring work with Meckano",
+  "version": "0.0.3",
+  "browser_action": {
+    "default_popup": "src/popup/popup.html"
+  },
+  "background": {
+    "scripts": ["dist/js/background.js"],
+    "persistent": true
+  },
+  "permissions": [
+    "alarms",
+    "webRequest",
+    "webRequestBlocking",
+    "https://app.meckano.co.il/api/*"
+  ]
 }

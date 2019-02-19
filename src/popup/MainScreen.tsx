@@ -6,7 +6,7 @@ interface IProps {}
 export class MainScreen extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
-    }
+    } 
 
     private reportToMeckano() {
         chrome.runtime.sendMessage({ messageType: 'reportToMeckano' });
@@ -15,7 +15,7 @@ export class MainScreen extends React.Component<IProps> {
     render() {
         return (
             <div>
-                <Button onClick={() => this.reportToMeckano()} variant="contained">At Work</Button>
+                <Button onClick={() => this.reportToMeckano()} variant="contained" fullWidth>At Work</Button>
             </div>
         );
     }

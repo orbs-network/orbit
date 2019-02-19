@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Typography from '@material-ui/core/Typography';
 
 interface IProps {}
 
@@ -8,6 +9,6 @@ export class AllDone extends React.Component<IProps> {
     }
 
     render() {
-        return <div>All done for today...</div>
+        return <Typography variant="h6">All done for today...</Typography>
     }
 }
