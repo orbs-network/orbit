@@ -4,12 +4,11 @@ import { getIsLoggedIn } from './loginStatus';
 import { cron } from './scheduler';
 import { blink, stopBlink } from './iconManager';
 
-fixRequest();
-
-cron(7, 0, () => {
-  const now = new Date();
-  console.log(`Its time: ${now.toString()}, blink!`);
-  blink();
+chrome.idle.onStateChanged.addListener((newState: string) => {
+  if (newState == 'active') {
+    console.log('Computer woke up from sleep (rescheduling)');
+    initCron();
+  }
 });
 
 chrome.runtime.onMessage.addListener(request => {
@@ -25,6 +24,17 @@ chrome.runtime.onMessage.addListener(request => {
 
   return false;
 });
+
+fixRequest();
+initCron();
+
+function initCron() {
+  cron(7, 0, () => {
+    const now = new Date();
+    console.log(`Its time: ${now.toString()}, blink!`);
+    blink();
+  });
+}
 
 async function reportToMeckano() {
   console.log('got request to report to meckano');

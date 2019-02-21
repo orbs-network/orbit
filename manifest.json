@@ -12,6 +12,7 @@
   },
   "permissions": [
     "alarms",
+    "idle",
     "webRequest",
     "webRequestBlocking",
     "https://app.meckano.co.il/api/*"
