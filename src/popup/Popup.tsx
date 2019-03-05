@@ -1,24 +1,17 @@
 import * as React from 'react';
-import './Popup.scss';
+import { AllDone } from './AllDone';
+import { CheckingTodayStatus } from './CheckingTodayStatus';
+import { DisplayTodayStatus } from './DisplayTodayStatus';
 import { LoginForm } from './LoginForm';
 import { LoginInProgress } from './LoginInProgress';
-import { DisplayTodayStatus } from './DisplayTodayStatus';
+import './Popup.scss';
 import { ReportInProgress } from './ReportInProgress';
-import { MainScreen } from './MainScreen';
-import { CheckingTodayStatus } from './CheckingTodayStatus';
-import { AllDone } from './AllDone';
-import { markSuccessfullLogin, hadSuccessfullLoginEver } from './loginHistory';
-import {
-  markSuccessfullReport,
-  hadSuccessFullReportToday
-} from './reportHistory';
 
 interface IProps {}
 
 type TScreens =
   | 'login'
   | 'login_in_progress'
-  | 'main_screen'
   | 'report_in_progress'
   | 'all_done'
   | 'checking_today_status'
@@ -33,26 +26,8 @@ export default class Popup extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
 
-    let screen: TScreens;
-    if (hadSuccessfullLoginEver()) {
-      if (hadSuccessFullReportToday()) {
-        console.log('We had a successfull report today, going to "all_done".');
-        screen = 'all_done';
-      } else {
-        console.log(
-          'We did not had a successfull report today, going to "main_screen"'
-        );
-        screen = 'main_screen';
-      }
-    } else {
-      console.log(
-        'this is the first time we open the extension, going to login'
-      );
-      screen = 'login';
-    }
-    screen = 'checking_today_status';
     this.state = {
-      screen,
+      screen: 'checking_today_status',
       loginErrorString: undefined,
       todayStatus: undefined
     };
@@ -78,7 +53,6 @@ export default class Popup extends React.Component<IProps, IState> {
         break;
 
       case 'login_success':
-        markSuccessfullLogin();
         this.setState({ screen: 'checking_today_status' });
         break;
 
@@ -87,7 +61,6 @@ export default class Popup extends React.Component<IProps, IState> {
         break;
 
       case 'report_success':
-        markSuccessfullReport();
         this.setState({ screen: 'all_done' });
         break;
     }
@@ -112,10 +85,6 @@ export default class Popup extends React.Component<IProps, IState> {
 
       case 'login_in_progress':
         mainComponent = <LoginInProgress />;
-        break;
-
-      case 'main_screen':
-        mainComponent = <MainScreen />;
         break;
 
       case 'report_in_progress':

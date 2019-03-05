@@ -16,7 +16,6 @@ export class DisplayTodayStatus extends React.Component<IProps> {
     const { todayStatus } = this.props;
     return (
       <>
-        <Typography variant='h6'>Today is the {todayStatus.date}</Typography>
         {todayStatus.reported ? (
           <Typography variant='h6'>We're all good for today</Typography>
         ) : (
