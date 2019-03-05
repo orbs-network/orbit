@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(request => {
   }
 
   if (request.messageType === 'reportToMeckano') {
-    reportToMeckano();
+    reportToMeckano(request.isWorkFromHome);
   }
 
   if (request.messageType === 'checkTodayStatus') {
@@ -37,11 +37,11 @@ function initCron() {
   });
 }
 
-async function reportToMeckano() {
+async function reportToMeckano(isWorkFromHome: boolean) {
   console.log('got request to report to meckano');
   try {
     chrome.runtime.sendMessage({ messageType: 'report_started' });
-    const reportSuccess = await meckano.reportEnter();
+    const reportSuccess = await meckano.reportEnter(isWorkFromHome);
     if (reportSuccess) {
       chrome.runtime.sendMessage({ messageType: 'report_success' });
       stopBlink();

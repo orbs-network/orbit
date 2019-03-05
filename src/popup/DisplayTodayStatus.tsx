@@ -8,8 +8,11 @@ interface IProps {
 }
 
 export class DisplayTodayStatus extends React.Component<IProps> {
-  private reportToMeckano() {
-    chrome.runtime.sendMessage({ messageType: 'reportToMeckano' });
+  private reportToMeckano(isWorkFromHome: boolean) {
+    chrome.runtime.sendMessage({
+      messageType: 'reportToMeckano',
+      isWorkFromHome
+    });
   }
 
   render() {
@@ -19,13 +22,22 @@ export class DisplayTodayStatus extends React.Component<IProps> {
         {todayStatus.reported ? (
           <Typography variant='h6'>We're all good for today</Typography>
         ) : (
-          <Button
-            onClick={() => this.reportToMeckano()}
-            variant='contained'
-            fullWidth
-          >
-            Report, at Work
-          </Button>
+          <>
+            <Button
+              onClick={() => this.reportToMeckano(false)}
+              variant='contained'
+              fullWidth
+            >
+              Report, at Work
+            </Button>
+            <Button
+              onClick={() => this.reportToMeckano(true)}
+              variant='contained'
+              fullWidth
+            >
+              Report, work from home
+            </Button>
+          </>
         )}
       </>
     );

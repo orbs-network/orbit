@@ -32,7 +32,7 @@ type TAPICallResult = {
 };
 
 async function callMeckanoAPI(
-  apiName: 'login' | 'timeEntry',
+  apiName: 'login' | 'report' | 'timeEntry',
   method: 'create' | 'read',
   data: object
 ): Promise<TAPICallResult> {
@@ -85,7 +85,7 @@ export async function login(email, password): Promise<boolean> {
   return ok;
 }
 
-export async function reportEnter(): Promise<boolean> {
+async function reportAtWork(): Promise<boolean> {
   const data = {
     id: null,
     userId: null,
@@ -97,6 +97,27 @@ export async function reportEnter(): Promise<boolean> {
 
   const { ok } = await callMeckanoAPI('timeEntry', 'create', data);
   return ok;
+}
+
+async function reportWorkFromHome(): Promise<boolean> {
+  const startOfToday = new Date();
+  startOfToday.setUTCHours(0, 0, 0, 0);
+
+  const baseTimestamp = Math.floor(startOfToday.getTime() / 1000);
+
+  const data = {
+    userId: 106277,
+    baseTimestamp,
+    isCurrentDay: true,
+    updateAbsenceId: 30034
+  };
+
+  const { ok } = await callMeckanoAPI('report', 'create', data);
+  return ok;
+}
+
+export async function reportEnter(isWorkFromHome: boolean): Promise<boolean> {
+  return isWorkFromHome ? reportWorkFromHome() : reportAtWork();
 }
 
 export async function reportExit(): Promise<boolean> {
