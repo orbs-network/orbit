@@ -1,8 +1,8 @@
+import { blink, stopBlink } from './iconManager';
 import * as meckano from './meckano';
 import { fixRequest } from './requestFixer';
-import { getIsLoggedIn } from './loginStatus';
 import { cron } from './scheduler';
-import { blink, stopBlink } from './iconManager';
+import { getTodayStatus } from './todayStatus';
 
 chrome.idle.onStateChanged.addListener((newState: string) => {
   if (newState == 'active') {
@@ -15,11 +15,13 @@ chrome.runtime.onMessage.addListener(request => {
   if (request.messageType === 'login') {
     login(request.email, request.password);
   }
+
   if (request.messageType === 'reportToMeckano') {
     reportToMeckano();
   }
-  if (request.messageType === 'checkLoginStatus') {
-    checkLoginStatus();
+
+  if (request.messageType === 'checkTodayStatus') {
+    checkTodayStatus();
   }
 
   return false;
@@ -27,9 +29,8 @@ chrome.runtime.onMessage.addListener(request => {
 
 fixRequest();
 initCron();
-
 function initCron() {
-  cron(7, 0, () => {
+  cron(11, 20, () => {
     const now = new Date();
     console.log(`Its time: ${now.toString()}, blink!`);
     blink();
@@ -79,20 +80,18 @@ async function login(email: string, password: string) {
   }
 }
 
-async function checkLoginStatus() {
-  console.log('got request to do check login status');
-  try {
-    const isLoggedIn = await getIsLoggedIn();
-    if (isLoggedIn === false) {
-      chrome.runtime.sendMessage({
-        messageType: 'login_failed',
-        data: { errorString: '' }
-      });
-    }
-  } catch (err) {
+async function checkTodayStatus() {
+  console.log(`got request to do check today's status`);
+  const { loginFailed, todayStatus } = await getTodayStatus();
+  if (loginFailed) {
     chrome.runtime.sendMessage({
       messageType: 'login_failed',
-      data: { errorString: err }
+      data: { errorString: '' }
+    });
+  } else {
+    chrome.runtime.sendMessage({
+      messageType: 'set_today_status',
+      data: { todayStatus }
     });
   }
 }
