@@ -6,6 +6,7 @@ import { LoginForm } from './LoginForm';
 import { LoginInProgress } from './LoginInProgress';
 import './Popup.scss';
 import { ReportInProgress } from './ReportInProgress';
+import { store } from './LocalStorage';
 
 interface IProps {}
 
@@ -54,6 +55,7 @@ export default class Popup extends React.Component<IProps, IState> {
 
       case 'login_success':
         this.setState({ screen: 'checking_today_status' });
+        store(data.email, data.password);
         break;
 
       case 'report_started':

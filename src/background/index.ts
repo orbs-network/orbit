@@ -65,7 +65,10 @@ async function login(email: string, password: string) {
     chrome.runtime.sendMessage({ messageType: 'login_started' });
     const loginSuccess = await meckano.login(email, password);
     if (loginSuccess) {
-      chrome.runtime.sendMessage({ messageType: 'login_success' });
+      chrome.runtime.sendMessage({
+        messageType: 'login_success',
+        data: { email, password }
+      });
     } else {
       chrome.runtime.sendMessage({
         messageType: 'login_failed',
