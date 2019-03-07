@@ -21,6 +21,7 @@ chrome.runtime.onMessage.addListener(request => {
   }
 
   if (request.messageType === 'checkTodayStatus') {
+    stopBlink();
     checkTodayStatus();
   }
 
@@ -30,7 +31,7 @@ chrome.runtime.onMessage.addListener(request => {
 fixRequest();
 initCron();
 function initCron() {
-  cron(11, 20, () => {
+  cron(7, 20, () => {
     const now = new Date();
     console.log(`Its time: ${now.toString()}, blink!`);
     blink();
@@ -44,7 +45,6 @@ async function reportToMeckano(isWorkFromHome: boolean) {
     const reportSuccess = await meckano.reportEnter(isWorkFromHome);
     if (reportSuccess) {
       chrome.runtime.sendMessage({ messageType: 'report_success' });
-      stopBlink();
     } else {
       chrome.runtime.sendMessage({
         messageType: 'report_failed',
