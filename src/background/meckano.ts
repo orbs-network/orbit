@@ -31,6 +31,21 @@ type TAPICallResult = {
   resultData?: any;
 };
 
+async function extractUserIdFromHomepage() {
+  const options = {
+    method: 'POST'
+  };
+  const res = await fetch(`https://app.meckano.co.il`, options);
+  if (res.status === 200) {
+    const text = await res.text();
+    const userId = text.match(
+      /Application\.initialize\('\/api\/\', ?{"id":(\d*), ?"email"/m
+    )[1];
+    console.log('Found account Id:', userId);
+    return userId;
+  }
+}
+
 async function callMeckanoAPI(
   apiName: 'login' | 'report' | 'timeEntry',
   method: 'create' | 'read',
@@ -105,8 +120,10 @@ async function reportWorkFromHome(): Promise<boolean> {
 
   const baseTimestamp = Math.floor(startOfToday.getTime() / 1000);
 
+  const userId = await extractUserIdFromHomepage();
+
   const data = {
-    userId: 106277,
+    userId,
     baseTimestamp,
     isCurrentDay: true,
     updateAbsenceId: 30034
