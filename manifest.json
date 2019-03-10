@@ -4,11 +4,18 @@
   "description": "A chrome extension to automate entring work with Meckano",
   "version": "0.0.3",
   "browser_action": {
-    "default_popup": "src/popup/popup.html"
+    "default_title": "Meckano Automator",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": "icons/icon16.png"
   },
   "background": {
     "scripts": ["dist/js/background.js"],
     "persistent": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "permissions": [
     "alarms",

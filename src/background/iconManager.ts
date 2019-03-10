@@ -1,50 +1,36 @@
-
-let isOn = false;
+let isIconVisible = false;
 let blinkingIntervalID = null;
 export function blink() {
-	if (blinkingIntervalID !== null) {
-		return;
-	}
+  if (blinkingIntervalID !== null) {
+    return;
+  }
 
-	blinkingIntervalID = setInterval(() => {
-		isOn = !isOn;
-		if (isOn) {
-			drawIcon("#FF5555");
-		} else {
-			drawIcon("#FFFFFF");
-		}
-	}, 250)
+  blinkingIntervalID = setInterval(() => {
+    isIconVisible = !isIconVisible;
+    drawIcon(isIconVisible);
+  }, 500);
 }
 
 export function stopBlink() {
-	if (blinkingIntervalID !== null) {
-		clearInterval(blinkingIntervalID);
-		drawIcon("#FF5555");
-	}
-	blinkingIntervalID = null;
+  if (blinkingIntervalID !== null) {
+    clearInterval(blinkingIntervalID);
+    drawIcon(true);
+  }
+  blinkingIntervalID = null;
 }
 
-function drawIcon(color) {
-	var canvas: HTMLCanvasElement = document.createElement('canvas')
-	var context = canvas.getContext('2d');
+function drawIcon(isIconVisible) {
+  if (isIconVisible) {
+    chrome.browserAction.setIcon({ path: '/icons/icon16.png' });
+  } else {
+    var canvas: HTMLCanvasElement = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    context.fillStyle = '#FFFFFF';
+    context.fill();
 
-	context.beginPath();
-	context.moveTo(0, 0);
-	context.lineTo(0, 19);
-	context.lineTo(19, 19);
-	context.lineTo(19, 0);
-	context.lineTo(0, 0);
-	context.closePath();
-	context.lineWidth = 1;
-	context.fillStyle = color;
-	context.fill();
-	context.strokeStyle = "#aaaaaa";
-	context.stroke();
-
-	context.fillStyle = "black";
-
-	var imageData = context.getImageData(0, 0, 19, 19);
-	chrome.browserAction.setIcon({
-		imageData: imageData
-	});
+    var imageData = context.getImageData(0, 0, 19, 19);
+    chrome.browserAction.setIcon({
+      imageData: imageData
+    });
+  }
 }
