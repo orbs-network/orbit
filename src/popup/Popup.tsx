@@ -20,7 +20,7 @@ type TScreens =
 interface IState {
   screen: TScreens;
   loginErrorString: string;
-  todayStatus: { date: string; reported: boolean };
+  todayReported: boolean;
 }
 
 export default class Popup extends React.Component<IProps, IState> {
@@ -30,7 +30,7 @@ export default class Popup extends React.Component<IProps, IState> {
     this.state = {
       screen: 'checking_today_status',
       loginErrorString: undefined,
-      todayStatus: undefined
+      todayReported: false
     };
   }
 
@@ -43,13 +43,13 @@ export default class Popup extends React.Component<IProps, IState> {
 
       case 'login_failed':
       case 'report_failed':
-        this.setState({ screen: 'login', loginErrorString: data.todayStatus });
+        this.setState({ screen: 'login', loginErrorString: data.errorString });
         break;
 
       case 'set_today_status':
         this.setState({
           screen: 'display_today_status',
-          todayStatus: data.todayStatus
+          todayReported: data.todayReported
         });
         break;
 
@@ -103,7 +103,7 @@ export default class Popup extends React.Component<IProps, IState> {
 
       case 'display_today_status':
         mainComponent = (
-          <DisplayTodayStatus todayStatus={this.state.todayStatus} />
+          <DisplayTodayStatus todayReported={this.state.todayReported} />
         );
         break;
     }

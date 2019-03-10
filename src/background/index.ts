@@ -85,7 +85,7 @@ async function login(email: string, password: string) {
 
 async function checkTodayStatus() {
   console.log(`got request to do check today's status`);
-  const { loginFailed, todayStatus } = await getTodayStatus();
+  const { loginFailed, todayReported } = await getTodayStatus();
   if (loginFailed) {
     chrome.runtime.sendMessage({
       messageType: 'login_failed',
@@ -94,7 +94,7 @@ async function checkTodayStatus() {
   } else {
     chrome.runtime.sendMessage({
       messageType: 'set_today_status',
-      data: { todayStatus }
+      data: { todayReported }
     });
   }
 }

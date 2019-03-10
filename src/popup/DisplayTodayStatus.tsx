@@ -1,11 +1,10 @@
-import * as React from 'react';
-import Typography from '@material-ui/core/Typography';
-import { ITodayStatus } from '../background/ITodayStatus';
-import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
 
 interface IProps {
-  todayStatus: ITodayStatus;
+  todayReported: boolean;
 }
 
 export class DisplayTodayStatus extends React.Component<IProps> {
@@ -17,10 +16,10 @@ export class DisplayTodayStatus extends React.Component<IProps> {
   }
 
   render() {
-    const { todayStatus } = this.props;
+    const { todayReported } = this.props;
     return (
       <>
-        {todayStatus.reported ? (
+        {todayReported ? (
           <Typography variant='h6'>We're all good for today</Typography>
         ) : (
           <Grid container spacing={24}>

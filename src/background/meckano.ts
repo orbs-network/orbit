@@ -1,3 +1,5 @@
+import { getUserId } from './userIdManager';
+
 const BASE_URL = 'https://app.meckano.co.il/api';
 
 function buildBody(method: 'create' | 'read', data: Object): string {
@@ -31,31 +33,13 @@ type TAPICallResult = {
   resultData?: any;
 };
 
-async function extractUserIdFromHomepage() {
-  const options = {
-    method: 'POST'
-  };
-  const res = await fetch(`https://app.meckano.co.il`, options);
-  if (res.status === 200) {
-    const text = await res.text();
-    const userId = text.match(
-      /Application\.initialize\('\/api\/\', ?{"id":(\d*), ?"email"/m
-    )[1];
-    console.log('Found account Id:', userId);
-    return userId;
-  }
-}
-
 async function callMeckanoAPI(
-  apiName: 'login' | 'report' | 'timeEntry',
+  apiName: string,
   method: 'create' | 'read',
   data: object
 ): Promise<TAPICallResult> {
   console.log(`calling /${apiName} API`);
-  const res = await fetch(
-    `${BASE_URL}/${apiName}/`,
-    buildOptions(method, data)
-  );
+  const res = await fetch(`${BASE_URL}/${apiName}`, buildOptions(method, data));
 
   if (res.status !== 200) {
     return { ok: false };
@@ -120,7 +104,10 @@ async function reportWorkFromHome(): Promise<boolean> {
 
   const baseTimestamp = Math.floor(startOfToday.getTime() / 1000);
 
-  const userId = await extractUserIdFromHomepage();
+  const userId = await getUserId();
+  if (!userId) {
+    return false;
+  }
 
   const data = {
     userId,
@@ -152,19 +139,18 @@ export async function reportExit(): Promise<boolean> {
 }
 
 export async function getStatus(): Promise<any> {
-  const data = {
-    id: null,
-    userId: null,
-    userName: null,
-    isOut: true,
-    ts: null,
-    mts: null
-  };
+  const userId = await getUserId();
+  if (!userId) {
+    return { unauthorized: true };
+  }
 
+  const now = new Date();
+  const todayStr = `${now.getDate()}-${now.getMonth() +
+    1}-${now.getFullYear()}`;
   const { resultData, unauthorized } = await callMeckanoAPI(
-    'timeEntry',
+    `report/${userId}/${todayStr}/${todayStr}`,
     'read',
-    data
+    {}
   );
   return { resultData, unauthorized };
 }
