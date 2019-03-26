@@ -4,7 +4,14 @@ import { INetwork } from '../utils/Networks';
 
 const styles = (theme: Theme) =>
   createStyles({
-    rootContainer: {}
+    rootContainer: {},
+    title: {
+      backgroundColor: theme.palette.grey[100],
+      textAlign: 'center',
+      padding: theme.spacing.unit,
+      marginTop: theme.spacing.unit,
+      textTransform: 'uppercase'
+    }
   });
 
 interface IProps extends WithStyles<typeof styles> {
@@ -22,13 +29,12 @@ export const History = withStyles(styles)(
       const { txIds } = network;
 
       return (
-        <Grid container className={classes.rootContainer}>
+        <div className={classes.rootContainer}>
+          <Typography className={classes.title}>History</Typography>
           {txIds.map(txId => (
-            <Grid item xs={12} key={txId}>
-              <Typography>{`${network.prismUrl}/tx/${txId.toLowerCase()}`}</Typography>
-            </Grid>
+            <Typography>{`${network.prismUrl}/tx/${txId.toLowerCase()}`}</Typography>
           ))}
-        </Grid>
+        </div>
       );
     }
   }

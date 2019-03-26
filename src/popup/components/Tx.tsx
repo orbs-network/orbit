@@ -6,7 +6,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import * as React from 'react';
 
-const styles1 = theme => ({
+const styles = theme => ({
   success: {
     backgroundColor: green[600],
     maxWidth: 350
@@ -61,4 +61,4 @@ function TxImpl(props) {
   );
 }
 
-export const Tx = withStyles(styles1)(TxImpl);
+export const Tx = withStyles(styles)(TxImpl);

@@ -31,7 +31,10 @@ const styles = (theme: Theme) =>
       margin: '4px 16px',
       flex: 1
     },
-    delButton: {}
+    delButton: {
+      position: 'relative',
+      top: 6
+    }
   });
 
 interface IProps extends WithStyles<typeof styles> {
