@@ -1,113 +1,174 @@
+import { Button, Grid, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { AllDone } from './AllDone';
-import { CheckingTodayStatus } from './CheckingTodayStatus';
-import { DisplayTodayStatus } from './DisplayTodayStatus';
-import { LoginForm } from './LoginForm';
-import { LoginInProgress } from './LoginInProgress';
+import { Arg } from './components/Arg';
+import { INetwork } from './utils/Networks';
 import './Popup.scss';
-import { ReportInProgress } from './ReportInProgress';
-import { store } from './LocalStorage';
+import { loadState, storeState } from './utils/StatePersistency';
+import { executeTx, IArg } from './utils/tx-generator';
+import { History } from './components/History';
 
 interface IProps {}
 
-type TScreens =
-  | 'login'
-  | 'login_in_progress'
-  | 'report_in_progress'
-  | 'all_done'
-  | 'checking_today_status'
-  | 'display_today_status';
-interface IState {
-  screen: TScreens;
-  loginErrorString: string;
-  todayReported: boolean;
+export interface IState {
+  networks: INetwork[];
+  selectedNetworkIdx: number;
+  contractName: string;
+  methodName: string;
+  args: IArg[];
+  errorStr: string;
 }
 
 export default class Popup extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
-
-    this.state = {
-      screen: 'checking_today_status',
-      loginErrorString: undefined,
-      todayReported: false
-    };
-  }
-
-  private onMessageFromBackground(messageType: string, data: any) {
-    console.log('onMessageFromBackground', messageType);
-    switch (messageType) {
-      case 'login_started':
-        this.setState({ screen: 'login_in_progress' });
-        break;
-
-      case 'login_failed':
-      case 'report_failed':
-        this.setState({ screen: 'login', loginErrorString: data.errorString });
-        break;
-
-      case 'set_today_status':
-        this.setState({
-          screen: 'display_today_status',
-          todayReported: data.todayReported
-        });
-        break;
-
-      case 'login_success':
-        this.setState({ screen: 'checking_today_status' });
-        store(data.email, data.password);
-        break;
-
-      case 'report_started':
-        this.setState({ screen: 'report_in_progress' });
-        break;
-
-      case 'report_success':
-        this.setState({ screen: 'all_done' });
-        break;
-    }
-  }
-
-  componentDidMount() {
-    chrome.runtime.onMessage.addListener((request, sender) => {
-      if (!sender.tab) {
-        this.onMessageFromBackground(request.messageType, request.data);
-      }
-    });
+    this.state = loadState();
   }
 
   render() {
-    let mainComponent;
-    switch (this.state.screen) {
-      case 'login':
-        mainComponent = (
-          <LoginForm errorMessage={this.state.loginErrorString} />
-        );
-        break;
+    return (
+      <div className='popupContainer'>
+        <Select
+          value={this.state.selectedNetworkIdx}
+          onChange={e => this._setState({ selectedNetworkIdx: parseInt(e.target.value, 10) })}
+        >
+          {this.state.networks.map((network, idx) => (
+            <MenuItem value={idx}>{network.name}</MenuItem>
+          ))}
+        </Select>
 
-      case 'login_in_progress':
-        mainComponent = <LoginInProgress />;
-        break;
+        {/* <ExpansionPanelDetails>
+            <Grid container>
+              <Grid item xs={12}>
+                <TextField
+                  autoFocus
+                  value={this.state.orbsEndPoint}
+                  margin='dense'
+                  id='orbsEndPoint'
+                  label='Orbs Endpoint'
+                  fullWidth
+                  onChange={e => this._setState({ orbsEndPoint: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  autoFocus
+                  value={this.state.prismUrl}
+                  margin='dense'
+                  id='prismUrl'
+                  label='Prism Url'
+                  fullWidth
+                  onChange={e => this._setState({ prismUrl: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  value={this.state.virtualChainId}
+                  margin='dense'
+                  id='virtualChainId'
+                  label='Virtual Chain Id'
+                  type='number'
+                  fullWidth
+                  onChange={e =>
+                    this._setState({
+                      virtualChainId: parseInt(e.target.value, 10)
+                    })
+                  }
+                />
+              </Grid>
+            </Grid>
+          </ExpansionPanelDetails> */}
+        <Grid container>
+          <Grid item xs={12}>
+            <TextField
+              autoFocus
+              value={this.state.contractName}
+              margin='dense'
+              id='contractName'
+              label='Contract Name'
+              fullWidth
+              onChange={e => this._setState({ contractName: e.target.value })}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              autoFocus
+              value={this.state.methodName}
+              margin='dense'
+              id='methodName'
+              label='Method Name'
+              fullWidth
+              onChange={e => this._setState({ methodName: e.target.value })}
+            />
+          </Grid>
+          {this.state.args.map((arg, idx) => (
+            <Grid item xs={12}>
+              <Arg
+                arg={arg}
+                onArgPropertyChange={(property, newValue) => this.onArgChange(idx, property, newValue)}
+                onArgRemoved={() => this.onArgRemoved(idx)}
+              />
+            </Grid>
+          ))}
+          <Grid item xs={12}>
+            <Button variant='contained' onClick={() => this.addArg()}>
+              Add Arg
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Button color='primary' variant='contained' fullWidth onClick={() => this.executeTx()}>
+              Execute
+            </Button>
+          </Grid>
+        </Grid>
+        <History network={this.getSelectedNetwork()} />
 
-      case 'report_in_progress':
-        mainComponent = <ReportInProgress />;
-        break;
+        <Typography>{this.state.errorStr ? `${this.state.errorStr}` : null}</Typography>
+      </div>
+    );
+  }
 
-      case 'all_done':
-        mainComponent = <AllDone />;
-        break;
+  private _setState(partialState: Partial<IState>): void {
+    this.setState(partialState as any, () => storeState(this.state));
+  }
 
-      case 'checking_today_status':
-        mainComponent = <CheckingTodayStatus />;
-        break;
+  private addTx(txId: string) {
+    const selectedNetwork = this.state.networks[this.state.selectedNetworkIdx];
+    selectedNetwork.txIds = [txId, ...selectedNetwork.txIds];
+    const networks: INetwork[] = this.state.networks;
+    this._setState({ networks });
+  }
 
-      case 'display_today_status':
-        mainComponent = (
-          <DisplayTodayStatus todayReported={this.state.todayReported} />
-        );
-        break;
+  private onArgChange(idx: number, property: string, value: any) {
+    const args = this.state.args.map((arg, i) => (i === idx ? { ...arg, [property]: value } : arg));
+    this._setState({ args });
+  }
+
+  private onArgRemoved(idx: number) {
+    const args = this.state.args.filter((_, i) => i !== idx);
+    this._setState({ args });
+  }
+
+  private getSelectedNetwork(): INetwork {
+    return this.state.networks[this.state.selectedNetworkIdx];
+  }
+
+  private addArg() {
+    const arg: IArg = {
+      value: 0,
+      type: 'Uint32'
+    };
+    const args = [...this.state.args, arg];
+    this._setState({ args });
+  }
+
+  private async executeTx() {
+    const { contractName, methodName, args } = this.state;
+    const { orbsEndPoint, virtualChainId } = this.getSelectedNetwork();
+    try {
+      const txId = await executeTx(orbsEndPoint, virtualChainId, contractName, methodName, args);
+      this.addTx(txId);
+    } catch (errorStr) {
+      this._setState({ errorStr });
     }
-
-    return <div className='popupContainer'>{mainComponent}</div>;
   }
 }

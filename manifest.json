@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Meckano Automator",
-  "description": "A chrome extension to automate entring work with Meckano",
+  "name": "Orbit",
+  "description": "A chrome extension to make it easy to generate orbs transactions",
   "version": "0.0.3",
   "browser_action": {
-    "default_title": "Meckano Automator",
+    "default_title": "Orbit",
     "default_popup": "src/popup/popup.html",
     "default_icon": "icons/icon16.png"
   },
@@ -17,11 +17,5 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": [
-    "alarms",
-    "idle",
-    "webRequest",
-    "webRequestBlocking",
-    "https://app.meckano.co.il/api/*"
-  ]
+  "permissions": []
 }
