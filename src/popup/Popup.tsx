@@ -25,7 +25,8 @@ import { executeTx, IArg } from './utils/tx-generator';
 const styles = (theme: Theme) =>
   createStyles({
     rootContainer: {
-      width: 550
+      width: 550,
+      minHeight: 550
     },
     mainContainer: {
       padding: '70px 16px 0 16px'

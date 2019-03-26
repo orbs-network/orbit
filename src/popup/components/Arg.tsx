@@ -52,6 +52,22 @@ export const Arg = withStyles(styles)(
     render() {
       const { arg, onArgPropertyChange, onArgRemoved, classes } = this.props;
       const { type, value } = arg;
+
+      let valueField;
+      switch (type) {
+        case 'Address':
+          valueField = this.renderAddressValueField(value);
+          break;
+
+        case 'Uint64':
+        case 'Uint32':
+          valueField = this.renderNumericValueField(value);
+          break;
+
+        default:
+          valueField = this.renderGeneralValueField(value);
+          break;
+      }
       return (
         <Grid container>
           <Grid item xs={12} className={classes.fieldsContainer}>
@@ -65,7 +81,7 @@ export const Arg = withStyles(styles)(
                 <MenuItem value='Address'>Address</MenuItem>
               </Select>
             </FormControl>
-            {type === 'Address' ? this.renderAddressValueField(value) : this.renderGeneralValueField(value)}
+            {valueField}
             <IconButton className={classes.delButton}>
               <DeleteIcon onClick={e => onArgRemoved()} />
             </IconButton>
@@ -87,15 +103,33 @@ export const Arg = withStyles(styles)(
       );
     }
 
+    private renderNumericValueField(value: any) {
+      const { onArgPropertyChange, classes } = this.props;
+      return (
+        <TextField
+          className={classes.argValue}
+          label='Numeric Value'
+          value={value}
+          onChange={e => onArgPropertyChange('value', e.target.value)}
+          margin='dense'
+          type='number'
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+      );
+    }
+
     private renderAddressValueField(value: string) {
       const { onArgPropertyChange, classes } = this.props;
       return (
         <FormControl className={classes.argValue}>
-          <InputLabel htmlFor='adornment-address'>Receiver Address</InputLabel>
+          <InputLabel htmlFor='adornment-address'>Address</InputLabel>
           <Input
             id='adornment-address'
             type={'text'}
             value={value}
+            onChange={e => onArgPropertyChange('value', e.target.value)}
             endAdornment={
               <InputAdornment position='end'>
                 <IconButton onClick={() => onArgPropertyChange('value', generateRandomAccount())}>

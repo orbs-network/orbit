@@ -44,9 +44,10 @@ export const Header = withStyles(styles)(
 
       return (
         <AppBar className={classes.rootContainer}>
-          <IconButton className={classes.logo}>
+          <img src='/icons/icon48.png' className={classes.logo} />
+          {/* <IconButton className={classes.logo}>
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <div className={classes.networksContainer}>
             <NetworksDropdown
               networks={networks}
