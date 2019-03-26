@@ -17,7 +17,6 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import Refresh from '@material-ui/icons/Refresh';
 import * as React from 'react';
-import './Popup.scss';
 import { IArg } from '../utils/tx-generator';
 import { generateRandomAccount } from '../utils/my-account';
 

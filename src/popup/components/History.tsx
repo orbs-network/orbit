@@ -1,6 +1,5 @@
 import { createStyles, Grid, Theme, WithStyles, withStyles, Typography } from '@material-ui/core';
 import * as React from 'react';
-import './Popup.scss';
 import { INetwork } from '../utils/Networks';
 
 const styles = (theme: Theme) =>
