@@ -1,4 +1,4 @@
-import { createStyles, Grid, Theme, WithStyles, withStyles, Typography } from '@material-ui/core';
+import { createStyles, Theme, WithStyles, withStyles, Typography, Link } from '@material-ui/core';
 import * as React from 'react';
 import { INetwork } from '../utils/Networks';
 
@@ -11,6 +11,10 @@ const styles = (theme: Theme) =>
       padding: theme.spacing.unit,
       marginTop: theme.spacing.unit,
       textTransform: 'uppercase'
+    },
+    tx: {
+      padding: theme.spacing.unit,
+      textAlign: 'center'
     }
   });
 
@@ -31,9 +35,14 @@ export const History = withStyles(styles)(
       return (
         <div className={classes.rootContainer}>
           <Typography className={classes.title}>History</Typography>
-          {txIds.map(txId => (
-            <Typography>{`${network.prismUrl}/tx/${txId.toLowerCase()}`}</Typography>
-          ))}
+          {txIds.map(txId => {
+            const txStr = `${txId.substr(0, 5)}...${txId.substr(txId.length - 5)}`;
+            return (
+              <div className={classes.tx}>
+                <Link href={`${network.prismUrl}/tx/${txId.toLowerCase()}`}>{txStr}</Link>
+              </div>
+            );
+          })}
         </div>
       );
     }

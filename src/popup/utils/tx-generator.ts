@@ -3,8 +3,6 @@ import { getMyAccount } from './my-account';
 
 const { argAddress, argUint64, argUint32, argString, Client } = Orbs;
 
-console.log('Orbs', Orbs);
-
 export type TArgType = 'Uint32' | 'Uint64' | 'String' | 'Bytes' | 'Address';
 export interface IArg {
   type: TArgType;
