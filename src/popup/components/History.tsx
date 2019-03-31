@@ -39,7 +39,9 @@ export const History = withStyles(styles)(
             const txStr = `${txId.substr(0, 5)}...${txId.substr(txId.length - 5)}`;
             return (
               <div className={classes.tx}>
-                <Link href={`${network.prismUrl}/tx/${txId.toLowerCase()}`}>{txStr}</Link>
+                <Link href={`${network.prismUrl}/tx/${txId.toLowerCase()}`} target={'_blank'}>
+                  {txStr}
+                </Link>
               </div>
             );
           })}
