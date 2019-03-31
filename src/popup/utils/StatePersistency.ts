@@ -1,6 +1,6 @@
 import { IState } from '../Popup';
 
-const VERSION = '4';
+const VERSION = '7';
 
 const defaultState: IState = {
   networks: [
@@ -12,10 +12,17 @@ const defaultState: IState = {
       txIds: []
     },
     {
-      name: '2020',
-      orbsEndPoint: 'http://3.122.219.67/vchains/2020/',
-      prismUrl: 'https://orbs-prism-staging.herokuapp.com',
-      virtualChainId: 2020,
+      name: 'Mainnet - 1,000,000',
+      orbsEndPoint: 'http://18.197.127.2/vchains/1000000/',
+      prismUrl: 'https://prism.orbs.com',
+      virtualChainId: 1000000,
+      txIds: []
+    },
+    {
+      name: 'Mainnet - 1,000,001',
+      orbsEndPoint: 'http://18.197.127.2/vchains/1000001/',
+      prismUrl: 'https://prism.orbs.com',
+      virtualChainId: 1000001,
       txIds: []
     }
   ],
