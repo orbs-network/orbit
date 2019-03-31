@@ -1,13 +1,4 @@
-import {
-  createStyles,
-  MenuItem,
-  Select,
-  Theme,
-  WithStyles,
-  withStyles,
-  StandardProps,
-  StyledComponentProps
-} from '@material-ui/core';
+import { createStyles, MenuItem, Select, Theme, WithStyles, withStyles } from '@material-ui/core';
 import * as React from 'react';
 import { INetwork } from '../utils/Networks';
 
