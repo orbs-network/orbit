@@ -30,7 +30,7 @@ function uint8ArrayToHexString(arr: Uint8Array): string {
 
 export function generateRandomAccount(): string {
   const newAccount = createAccount();
-  return uint8ArrayToHexString(newAccount.publicKey);
+  return newAccount.address;
 }
 
 export function generateMyAccount(): Account {
