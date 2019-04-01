@@ -1,6 +1,6 @@
 import { IState } from '../Popup';
 
-const VERSION = '7';
+const VERSION = '8';
 
 const defaultState: IState = {
   networks: [
@@ -12,17 +12,24 @@ const defaultState: IState = {
       txIds: []
     },
     {
-      name: 'Mainnet - 1,000,000',
+      name: 'Production - 1,000,000',
       orbsEndPoint: 'http://18.197.127.2/vchains/1000000/',
       prismUrl: 'https://prism.orbs.com',
       virtualChainId: 1000000,
       txIds: []
     },
     {
-      name: 'Mainnet - 1,000,001',
+      name: 'Production - 1,000,001',
       orbsEndPoint: 'http://18.197.127.2/vchains/1000001/',
       prismUrl: 'https://prism.orbs.com',
       virtualChainId: 1000001,
+      txIds: []
+    },
+    {
+      name: 'Production - 1,100,000',
+      orbsEndPoint: 'http://18.197.127.2/vchains/1100000/',
+      prismUrl: 'https://prism.orbs.com',
+      virtualChainId: 1100000,
       txIds: []
     }
   ],
