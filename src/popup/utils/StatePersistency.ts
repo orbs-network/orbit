@@ -1,6 +1,6 @@
 import { IState } from '../Popup';
 
-const VERSION = '8';
+const VERSION = '9';
 
 const defaultState: IState = {
   networks: [
@@ -29,6 +29,13 @@ const defaultState: IState = {
       name: 'Production - 1,100,000',
       orbsEndPoint: 'http://18.197.127.2/vchains/1100000/',
       prismUrl: 'https://prism.orbs.com',
+      virtualChainId: 1100000,
+      txIds: []
+    },
+    {
+      name: 'STAGING - 1,100,000',
+      orbsEndPoint: 'http://18.197.127.2/vchains/1100000/',
+      prismUrl: 'HTTPS://orbs-prism-staging.herokuapp.com',
       virtualChainId: 1100000,
       txIds: []
     }
